@@ -1,0 +1,339 @@
+{
+  "base_url": "https://admin.vromonbilas.com",
+  "executed_at": "2026-10-07",
+  "checks": [
+    {
+      "id": "SEC-001",
+      "title": "Unauthenticated profile access",
+      "method": "GET",
+      "url": "https://admin.vromonbilas.com/v1/user/profile/",
+      "status": 403,
+      "ms": 3310,
+      "headers": {
+        "Server": "nginx/1.24.0 (Ubuntu)",
+        "Date": "Wed, 07 Oct 2026 09:31:38 GMT",
+        "Content-Type": "application/json",
+        "Content-Length": "58",
+        "Connection": "keep-alive",
+        "Vary": "Accept, origin, Cookie",
+        "Allow": "GET, POST, HEAD, OPTIONS",
+        "X-Frame-Options": "DENY",
+        "X-Content-Type-Options": "nosniff",
+        "Referrer-Policy": "same-origin",
+        "Cross-Origin-Opener-Policy": "same-origin"
+      },
+      "body": {
+        "detail": "Authentication credentials were not provided."
+      },
+      "expected": "401/403 or documented unauthenticated response",
+      "security_header_observation": {
+        "strict-transport-security": null,
+        "x-content-type-options": "nosniff",
+        "x-frame-options": "DENY",
+        "content-security-policy": null,
+        "referrer-policy": "same-origin",
+        "access-control-allow-origin": null
+      },
+      "stack_trace_disclosed": false,
+      "password_or_otp_exposed": false
+    },
+    {
+      "id": "SEC-002",
+      "title": "Invalid resort slug does not disclose stack trace",
+      "method": "GET",
+      "url": "https://admin.vromonbilas.com/v1/resorts/invalid-slug/",
+      "status": 404,
+      "ms": 1271,
+      "headers": {
+        "Server": "nginx/1.24.0 (Ubuntu)",
+        "Date": "Wed, 07 Oct 2026 09:31:39 GMT",
+        "Content-Type": "application/json",
+        "Content-Length": "47",
+        "Connection": "keep-alive",
+        "Vary": "Accept, origin, Cookie",
+        "Allow": "GET, HEAD, OPTIONS",
+        "X-Frame-Options": "DENY",
+        "X-Content-Type-Options": "nosniff",
+        "Referrer-Policy": "same-origin",
+        "Cross-Origin-Opener-Policy": "same-origin"
+      },
+      "body": {
+        "detail": "No Resort matches the given query."
+      },
+      "expected": "404 without stack trace",
+      "security_header_observation": {
+        "strict-transport-security": null,
+        "x-content-type-options": "nosniff",
+        "x-frame-options": "DENY",
+        "content-security-policy": null,
+        "referrer-policy": "same-origin",
+        "access-control-allow-origin": null
+      },
+      "stack_trace_disclosed": false,
+      "password_or_otp_exposed": false
+    },
+    {
+      "id": "SEC-003",
+      "title": "Malformed OTP request validation",
+      "method": "POST",
+      "url": "https://admin.vromonbilas.com/v1/account/otp/create/",
+      "status": 200,
+      "ms": 1001,
+      "headers": {
+        "Server": "nginx/1.24.0 (Ubuntu)",
+        "Date": "Wed, 07 Oct 2026 09:31:40 GMT",
+        "Content-Type": "application/json",
+        "Content-Length": "142",
+        "Connection": "keep-alive",
+        "Vary": "Accept, origin, Cookie",
+        "Allow": "POST, OPTIONS",
+        "X-Frame-Options": "DENY",
+        "X-Content-Type-Options": "nosniff",
+        "Referrer-Policy": "same-origin",
+        "Cross-Origin-Opener-Policy": "same-origin"
+      },
+      "body": {
+        "status": 0,
+        "error": {
+          "region": [
+            [
+              "Select a valid choice. XX is not one of the available choices."
+            ]
+          ],
+          "phone": [
+            [
+              "Enter a valid phone number."
+            ]
+          ]
+        }
+      },
+      "expected": "Validation response; no OTP sent",
+      "security_header_observation": {
+        "strict-transport-security": null,
+        "x-content-type-options": "nosniff",
+        "x-frame-options": "DENY",
+        "content-security-policy": null,
+        "referrer-policy": "same-origin",
+        "access-control-allow-origin": null
+      },
+      "stack_trace_disclosed": false,
+      "password_or_otp_exposed": false
+    },
+    {
+      "id": "SEC-004",
+      "title": "Invalid login does not disclose account details",
+      "method": "POST",
+      "url": "https://admin.vromonbilas.com/v1/account/login/",
+      "status": 200,
+      "ms": 1408,
+      "headers": {
+        "Server": "nginx/1.24.0 (Ubuntu)",
+        "Date": "Wed, 07 Oct 2026 09:31:41 GMT",
+        "Content-Type": "application/json",
+        "Content-Length": "12",
+        "Connection": "keep-alive",
+        "Vary": "Accept, origin, Cookie",
+        "Allow": "OPTIONS, POST",
+        "X-Frame-Options": "DENY",
+        "X-Content-Type-Options": "nosniff",
+        "Referrer-Policy": "same-origin",
+        "Cross-Origin-Opener-Policy": "same-origin"
+      },
+      "body": {
+        "status": 0
+      },
+      "expected": "Application status 0; no token",
+      "security_header_observation": {
+        "strict-transport-security": null,
+        "x-content-type-options": "nosniff",
+        "x-frame-options": "DENY",
+        "content-security-policy": null,
+        "referrer-policy": "same-origin",
+        "access-control-allow-origin": null
+      },
+      "stack_trace_disclosed": false,
+      "password_or_otp_exposed": false
+    },
+    {
+      "id": "SEC-005",
+      "title": "Checkout empty payload validation",
+      "method": "POST",
+      "url": "https://admin.vromonbilas.com/v1/resort/checkout/",
+      "status": 400,
+      "ms": 1082,
+      "headers": {
+        "Server": "nginx/1.24.0 (Ubuntu)",
+        "Date": "Wed, 07 Oct 2026 09:31:42 GMT",
+        "Content-Type": "application/json",
+        "Content-Length": "161",
+        "Connection": "keep-alive",
+        "Vary": "Accept, origin, Cookie",
+        "Allow": "POST, OPTIONS",
+        "X-Frame-Options": "DENY",
+        "X-Content-Type-Options": "nosniff",
+        "Referrer-Policy": "same-origin",
+        "Cross-Origin-Opener-Policy": "same-origin"
+      },
+      "body": {
+        "checkin": [
+          "This field is required."
+        ],
+        "checkout": [
+          "This field is required."
+        ],
+        "room_categories": [
+          "This field is required."
+        ],
+        "resort": [
+          "This field is required."
+        ]
+      },
+      "expected": "400/422; no price or booking",
+      "security_header_observation": {
+        "strict-transport-security": null,
+        "x-content-type-options": "nosniff",
+        "x-frame-options": "DENY",
+        "content-security-policy": null,
+        "referrer-policy": "same-origin",
+        "access-control-allow-origin": null
+      },
+      "stack_trace_disclosed": false,
+      "password_or_otp_exposed": false
+    },
+    {
+      "id": "SEC-006",
+      "title": "CORS/header observation",
+      "method": "GET",
+      "url": "https://admin.vromonbilas.com/v1/home/",
+      "status": 200,
+      "ms": 2504,
+      "headers": {
+        "Server": "nginx/1.24.0 (Ubuntu)",
+        "Date": "Wed, 07 Oct 2026 09:31:45 GMT",
+        "Content-Type": "application/json",
+        "Content-Length": "2630",
+        "Connection": "keep-alive",
+        "Vary": "Accept, origin, Cookie",
+        "Allow": "GET, OPTIONS",
+        "X-Frame-Options": "DENY",
+        "X-Content-Type-Options": "nosniff",
+        "Referrer-Policy": "same-origin",
+        "Cross-Origin-Opener-Policy": "same-origin"
+      },
+      "body": {
+        "featured_resort": [
+          {
+            "title": "Vromon Resort",
+            "slug": "vromon-resort",
+            "address": "Saint Martin, Teknaf, Cox's Bazar",
+            "image": {
+              "image": "/media/resorts/vromon-resort/pullman-all-inclusive-maldives.jpg"
+            },
+            "sale_price": 1800.0
+          }
+        ],
+        "featured_package": [
+          {
+            "title": "পিকনিক ফুল প্যাকেজ । ঢাকা -নুহাশ পল্লী",
+            "slug": "picnic-full-package-dhaka-nuhash-palli",
+            "package_category": "Picnic Package",
+            "price": 700.0,
+            "tourist_spots": [
+              "Nuhash Polli"
+            ],
+            "vromonbilash_rating": 0,
+            "package_rating": 0,
+            "thumbnails": [
+              {
+                "image": "/media/packages/picnic-full-package-dhaka-nuhash-palli/1692020322.jpeg"
+              },
+              {
+                "image": "/media/packages/picnic-full-package-dhaka-nuhash-palli/1692020871.jpeg"
+              },
+              {
+                "image": "/media/packages/picnic-full-package-dhaka-nuhash-palli/nuhash-polli-04.jpg"
+              }
+            ]
+          },
+          {
+            "title": "ফ্রেন্ডস এন্ড ফ্যামিলি ডে আউট প্যাকেজঃ ঢাকা - নুহাশপল্লী - সাফারি পার্ক",
+            "slug": "friends-and-family-package-dhaka-nuhash-palli-safari-park",
+            "package_category": "Family Package",
+            "price": 1600.0,
+            "tourist_spots": [
+              "Nuhash Polli"
+            ],
+            "vromonbilash_rating": 4.0,
+            "package_rating": 4.0,
+            "thumbnails": [
+              {
+                "image": "/media/packages/friends-and-family-package-dhaka-nuhashpally-safari-park/1701949795.png"
+              },
+              {
+                "image": "/media/packages/friends-and-family-package-dhaka-nuhashpally-safari-park/1701949938.png"
+              },
+              {
+                "image": "/media/packages/friends-and-family-package-dhaka-nuhashpally-safari-park/1701949829.png"
+              }
+            ]
+          },
+          {
+            "title": "শিক্ষা সফরঃ ঢাকা - নুহাশ পল্লী",
+            "slug": "educational-tour-dhaka-nuhash-palli",
+            "package_category": "Study Tour Package",
+            "price": 650.0,
+            "tourist_spots": [
+              "Nuhash Polli"
+            ],
+            "vromonbilash_rating": 0,
+            "package_rating": 0,
+            "thumbnails": [
+              {
+                "image": "/media/packages/educational-tour-dhaka---nuhash-palli/IMG_20190823_224607.jpg"
+              },
+              {
+                "image": "/media/packages/educational-tour-dhaka---nuhash-palli/131267754_10158259369626501_6806236625121110413_n.jpg"
+              },
+              {
+                "image": "/media/packages/educational-tour-dhaka---nuhash-palli/1579287655_7.jpg"
+              }
+            ]
+          }
+        ],
+        "offers": [
+          {
+            "image": "/media/offers/Insight-Resort-11000.webp",
+            "link": "http://server2.vromonbilash.com/resorts/vromon-resort"
+          },
+          {
+            "image": "/media/offers/FiFThFyaEAA1yKK.jpg",
+            "link": "http://server2.vromonbilash.com/resorts/doubletree-suites-by-hilton-phoenix"
+          },
+          {
+            "image": "/media/offers/half-board-web.png-2.png",
+            "link": "http://server2.vromonbilash.com/resorts/the-tsubaki-tower"
+          },
+          {
+            "image": "/media/offers/20615887_10154710160140373_5217576603507825808_o.jpg",
+            "link": "http://server2.vromonbilash.com/resorts/four-seasons-resort-dubai-at-jumeirah-beach"
+          }
+        ]
+      },
+      "expected": "Security headers documented/verified",
+      "security_header_observation": {
+        "strict-transport-security": null,
+        "x-content-type-options": "nosniff",
+        "x-frame-options": "DENY",
+        "content-security-policy": null,
+        "referrer-policy": "same-origin",
+        "access-control-allow-origin": null
+      },
+      "stack_trace_disclosed": false,
+      "password_or_otp_exposed": false
+    }
+  ],
+  "tls": {
+    "tls_summary": "subject=CN = admin.vromonbilas.com\nissuer=C = US, O = Let's Encrypt, CN = YE1\nnotBefore=Aug 22 05:24:08 2026 GMT\nnotAfter=Nov 20 05:24:07 2026 GMT"
+  },
+  "scope_note": "Safe non-destructive checks only; no XSS/SQLi/load/payment/booking creation executed against public environment."
+}

@@ -1,0 +1,574 @@
+{
+  "info": {
+    "name": "VromonBilash - Full Documented API Tests",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Safe documented API tests; mutation/OTP/payment cases require QA sandbox."
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "https://admin.vromonbilas.com/v1"
+    }
+  ],
+  "item": [
+    {
+      "name": "Login - documented sample",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/account/login/",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "account",
+            "login"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\"userLoginId\": \"shihab\", \"password\": \"shihab\", \"user_type\": \"R\"}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 200\",()=>pm.response.to.have.status(200));",
+              "const b=pm.response.json(); pm.expect(b).to.have.property(\"status\");"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Login - invalid",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/account/login/",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "account",
+            "login"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\"userLoginId\": \"qa-nonexistent-user\", \"password\": \"Wrong@12345\", \"user_type\": \"R\"}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 200\",()=>pm.response.to.have.status(200));",
+              "pm.expect(pm.response.json().status).to.eql(0);"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Profile - unauthorized",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/user/profile/",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "user",
+            "profile"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Protected endpoint\",()=>pm.expect(pm.response.code).to.be.oneOf([401,403]));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "OTP create - malformed",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/account/otp/create/",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "account",
+            "otp",
+            "create"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\"phone\": \"abc123\", \"region\": \"XX\"}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Application validation failure\",()=>pm.expect(pm.response.json().status).to.eql(0));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "OTP verify - invalid code",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/account/otp/verify/",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "account",
+            "otp",
+            "verify"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\"phone\": \"+8801533038817\", \"region\": \"RB\", \"otp\": \"000000\"}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Invalid OTP rejected\",()=>pm.expect(pm.response.json().status).to.eql(0));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Register - empty validation",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/account/register/",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "account",
+            "register"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Application validation exists\",()=>pm.expect(pm.response.json().status).to.eql(0));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Change password - unauthorized",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/account/change-password/",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "account",
+            "change-password"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\"old_password\": \"wrong\", \"new_password\": \"New@12345\", \"confirm_password\": \"New@12345\"}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Protected endpoint\",()=>pm.expect(pm.response.code).to.be.oneOf([401,403]));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Resort list",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/resorts/",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "resorts"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Response received\",()=>pm.expect(pm.response.code).to.be.oneOf([200,400,401,403,404]));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Resort suggestions",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/resorts/suggestions/?search=cox",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "resorts",
+            "suggestions",
+            "?search=cox"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Response received\",()=>pm.expect(pm.response.code).to.be.oneOf([200,400,401,403,404]));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Invalid resort slug",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/resorts/invalid-slug/",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "resorts",
+            "invalid-slug"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 404\",()=>pm.response.to.have.status(404));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Checkout - empty",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/resort/checkout/",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "resort",
+            "checkout"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 400\",()=>pm.response.to.have.status(400));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Checkout - valid calculation",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/resort/checkout/",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "resort",
+            "checkout"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\"resort\": \"vromon-resort\", \"checkin\": \"2026-10-20\", \"checkout\": \"2026-10-21\", \"room_categories\": [{\"slug\": \"deluxe-room\", \"rooms\": [{\"room_type\": \"N\", \"adult\": 1, \"child\": 0}]}]}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 200\",()=>pm.response.to.have.status(200));",
+              "const b=pm.response.json(); pm.expect(b).to.have.all.keys(\"sub_total\",\"coupon_discount\",\"vat\",\"total\",\"room_categories\");",
+              "pm.test(\"Total formula\",()=>pm.expect(Number(b.total)).to.eql(Number(b.sub_total)-Number(b.coupon_discount||0)+Number(b.vat||0)));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Negative occupancy",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/resorts/?adult=-1&children=-1",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "resorts",
+            "?adult=-1&children=-1"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Negative occupancy rejected\",()=>pm.expect(pm.response.code).to.be.oneOf([400,422]));"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
