@@ -1,8 +1,8 @@
 # VromonBilash – Software Quality Assurance (SQA) Project
 
-A complete QA portfolio for the **VromonBilash** project, covering test case design, bug reporting, and functional and non-functional testing. The work was done as a **Junior SQA Engineer** at **Cloud Next Generation UK Ltd** (project-based, Dec 2023 – May 2024).
+A complete QA portfolio for the **VromonBilash** project, covering test case design, bug reporting, and functional and non-functional testing. The work was done as a **Junior SQA Engineer** at **Cloud Next Generation UK Ltd** (project-based work).
 
-> **About the application:** [Write 1–2 lines about VromonBilash here: what it does, who uses it, and whether it is a web app, a mobile app, or both.]
+
 
 ---
 
